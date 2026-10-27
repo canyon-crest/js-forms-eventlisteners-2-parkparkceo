@@ -17,7 +17,9 @@
 
 // STEP 1: Get the "Shout" button by its ID ("btnShout")
 //         using document.getElementById()
-
+document.getElementById("btnShout").addEventListener('click', function(){
+    outShout.innerHTML = shoutInput.value.toUpperCase();
+})
 // STEP 2: Add a click event listener to the button.
 //         Inside the listener function:
 //         a) Get the text from the input with ID "shoutInput"
@@ -29,7 +31,6 @@
 //
 //         Example: "hello" → "HELLO!"
 
-
 // ============================================
 //  MAIN: Pizza Builder
 // ============================================
@@ -39,17 +40,46 @@
 //   - Toppings (checkboxes): $0.50 each
 //   - Service (dropdown): Dine In $0, Take Out $1.50,
 //     Delivery $3.00
-
 // STEP 3: Get the "Calculate Total" button by ID ("btnCalc")
 //         Add a click event listener.
 //         Inside the listener:
-
 //   a) Get the selected size price:
 //      Use document.getElementsByName("rg") to get all
 //      size radio buttons. Loop through them to find the
 //      one that is .checked, and read its .value.
 //      Convert to a number with parseFloat().
+document.getElementById('btnCalc').addEventListener('click', function(){
+    const size = document.getElementsByName("rg");
+    let sizePrice = 0;
+    for(let i=0; i<size.length; i++){
+        if (size[i].checked){
+            sizePrice = parseFloat(size[i].value);
+        }
+    }
+    const toppings = document.getElementsByName("cb");
+    let count = 0;
+    for(let i =0; i<toppings.length; i++){
+        if (toppings[i].checked){
+            count += 1;
+        }
+    }
+    let toppingsPrice = count * 0.50;
+    let serviceFee = 0;
+    if (document.getElementById("serviceSelect").value === "delivery"){
+        serviceFee = 3.00;
+    }
+    else if(document.getElementById("serviceSelect").value === "takeout"){
+        serviceFee = 1.50;
+    }
+    let total = sizePrice + toppingsPrice + serviceFee;
 
+    let name = document.getElementById("myInput").value;
+    if (name === ""){
+        name = "Customer";
+    }
+
+    document.getElementById("myPara").textContent = name + ", your total is $" + total.toFixed(2);
+})
 //   b) Count checked toppings:
 //      Use document.getElementsByName("cb") to get all
 //      topping checkboxes. Loop through and count how
@@ -83,3 +113,13 @@
 //         c) Uncheck ALL topping checkboxes (loop through them)
 //         d) Set the service dropdown value to "dinein"
 //         e) Set the output paragraph innerHTML to ""
+document.getElementById("clearBtn").addEventListener('click', function(){
+    document.getElementById('myInput').value = "";
+    document.getElementById('r3').checked = true;
+    const toppings = document.getElementsByName('cb');
+    for (let i=0; i<toppings.length; i++){
+        toppings[i].checked = false;
+    }
+    document.getElementById("serviceSelect").value = "dinein";
+    document.getElementById("myPara").innerHTML = "";
+})
